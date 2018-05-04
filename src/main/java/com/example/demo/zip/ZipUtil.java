@@ -219,14 +219,21 @@ public class ZipUtil {
 
             //写入文件
             bos = new BufferedOutputStream(new FileOutputStream(entryFile));
-            bis = new BufferedInputStream(zip.getInputStream(entry));
+            InputStream inputStream = zip.getInputStream(entry);
+            bis = new BufferedInputStream(inputStream);
             while ((count = bis.read(buffer, 0, bufferSize)) != -1)
             {
                 bos.write(buffer, 0, count);
             }
+
+            inputStream.close();
+            bis.close();
+
             bos.flush();
             bos.close();
+
         }
+        zip.close();
     }
 
     public static void main(String[] args)

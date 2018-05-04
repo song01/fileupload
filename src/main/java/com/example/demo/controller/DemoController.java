@@ -59,9 +59,11 @@ public class DemoController {
                 String path = saveFile(file1);
                 logger.info("path"+path);
                 //unzipfileName group_name，remoteFileName保存数据库
-               // file1.delete();
+
             }
-            //zipFile.delete();
+            deleteDir(unzipFileDir);
+            boolean delete = zipFile.delete();
+            logger.info("delete:   "+delete+"filename   "+fileName);
             //删除本地文件
 
 
@@ -106,6 +108,20 @@ public class DemoController {
         }
         String path=FastDFSClient.getTrackerUrl()+fileAbsolutePath[0]+ "/"+fileAbsolutePath[1];
         return path;
+    }
+
+    private static boolean deleteDir(File dir) {
+        if (dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i=0; i<children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        // 目录此时为空，可以删除
+        return dir.delete();
     }
 
     /**
